@@ -26,10 +26,14 @@ app.post('/todos',(req, res)=>{
 //    console.log(req.body);
 });
 
+
+
+
+
  app.listen(4000 ,()=>{
      console.log('App started on port 4000');
  });
 
-
+module.exports={app};
 
 
