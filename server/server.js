@@ -51,7 +51,7 @@ app.get('/todos/:id',(req,res)=>{
 var id=req.params.id;
 if(!ObjectID.isValid(id))
 {
-    res.status(404).send();
+    return  res.status(404).send();
 }
 
     Todo.findById(id).then((todo)=>{
@@ -73,6 +73,34 @@ if(!ObjectID.isValid(id))
 //res.send(req.params);
 });
 
+
+
+//delete
+app.delete('/todos/:id',(req,res)=>{
+
+    var id= req.params.id;
+
+    if(!ObjectID.isValid(id)){
+      
+        return  res.status(404).send('object id is not valid');
+    }
+
+    Todo.findByIdAndRemove(id).then((todo)=>{
+    if(!todo)
+    {
+       return res.status(404).send("todo is not present in db");
+    }
+
+    res.status(404).send(todo);
+    },(err)=>{
+        if(err)
+        {
+            return   res.status(400).send('Internal server error');
+        }
+    }).catch((e)=>{
+        return   res.status(400).send(e);
+    });
+});
 
 
 
