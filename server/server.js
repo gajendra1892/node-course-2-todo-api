@@ -1,11 +1,13 @@
- var express =require('express');
- var bodyParser =require('body-parser');
+const express =require('express');
+ const bodyParser =require('body-parser');
+ const {ObjectID} =require('mongodb');
+ const _=require('lodash');
  
  var {mongoose} =require('./db/mongoose');
  var { Todo } =require('./models/todo');
  var { User } =require('./models/user');
 
- var {ObjectID} =require('mongodb');
+
 
 
  var  app =express();
@@ -75,7 +77,7 @@ if(!ObjectID.isValid(id))
 
 
 
-//delete
+//delete todo
 app.delete('/todos/:id',(req,res)=>{
 
     var id= req.params.id;
@@ -103,7 +105,40 @@ app.delete('/todos/:id',(req,res)=>{
     });
 });
 
+//update todo
+app.patch('/todos/:id',(req,res)=>{
 
+    var id =req.params.id;
+    var body =_.pick(req.body,['text','completed']);
+
+    if(!ObjectID.isValid(id)){
+      
+        return  res.status(404).send('object id is not valid');
+    }
+
+    if(_.isBoolean(body.completed) && body.completed){
+        body.completedAt =new Date().getTime();
+    }
+    else{
+        body.completed=false;
+        body.completedAt=null;
+
+    }
+
+    Todo.findOneAndUpdate(id,{
+        $set:body
+    },{
+        new:true
+    }).then((todo)=>{
+     if(!todo){
+         return res.status(404).send('Object not found');
+     }
+     res.status(200).send(todo);
+    }).catch((e)=>{
+        res.status(404).send('Internal server error');
+    });
+    
+});
 
 app.listen(port ,()=>{
     console.log(`App started on port ${port}`);
