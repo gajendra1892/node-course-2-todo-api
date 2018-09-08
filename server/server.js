@@ -10,6 +10,12 @@
 
  var  app =express();
 
+ //for deployment
+const port =process.env.PORT ||3000;
+
+
+  //for deployment
+
 //post
 app.use(bodyParser.json());
 app.post('/todos',(req, res)=>{
@@ -70,11 +76,13 @@ if(!ObjectID.isValid(id))
 
 
 
+app.listen(port ,()=>{
+    console.log(`App started on port ${port}`);
+});
 
-
- app.listen(4000 ,()=>{
-     console.log('App started on port 4000');
- });
+//  app.listen(4000 ,()=>{
+//      console.log('App started on port 4000');
+//  });
 
 module.exports={app};
 
