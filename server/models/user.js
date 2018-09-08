@@ -36,7 +36,7 @@ var UserSchema = new mongoose.Schema({
     }]
 });
 
-
+//instanse method
 //override method the existing to customize the return properties of user
 UserSchema.methods.toJSON =function(){
     var user =this;
@@ -46,7 +46,7 @@ UserSchema.methods.toJSON =function(){
 }
 
 
-//custom method added
+//custom method added //instanse method
 UserSchema.methods.generarteAuthToken=function(){
  var user=this;
  var access ='auth';
@@ -62,6 +62,33 @@ UserSchema.methods.generarteAuthToken=function(){
     return token;
     });
 };
+
+//model method
+UserSchema.statics.findByToken =function(token){
+ var User =this;
+ var decoded;
+
+ try{
+  
+   decoded= jwt.verify(token,'abc123');
+
+ }catch(e){
+
+    return Promise.reject();
+    // return new Promise((resolve,reject)=>{
+    //     reject();
+    // });
+ }
+  
+ //' ' quotes are required when values has .(dots)
+ return User.findOne({
+    '_id':decoded._id,
+    'tokens.token' :token,
+    'tokens.access':'auth'
+ });
+
+};
+
 var User=mongoose.model('User', UserSchema);
 
 module.exports ={ User };
