@@ -1,15 +1,4 @@
-var env =process.env.NODE_ENV || 'development';
-
-console.log('env *********',env);
-if(env ==='development')
-{
- process.env.PORT =3000;
- process.env.MONGODB_URI='mongodb://localhost:27017/TodoApp';
-}
-else{
-    process.env.PORT =3000;
-    process.env.MONGODB_URI='mongodb://localhost:27017/TodoAppTest';
-}
+require('./config/config');
 
 const express =require('express');
  const bodyParser =require('body-parser');
@@ -26,8 +15,8 @@ const express =require('express');
  var  app =express();
 
  //for deployment
-// const port =process.env.PORT ||3000;
-const port =process.env.PORT ;
+ const port =process.env.PORT ||3000;
+//const port =process.env.PORT ;
 
 
   //for deployment
