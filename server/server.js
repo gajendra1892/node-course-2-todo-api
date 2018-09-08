@@ -125,7 +125,7 @@ app.patch('/todos/:id',(req,res)=>{
 
     }
 
-    Todo.findOneAndUpdate(id,{
+    Todo.findByIdAndUpdate(id,{
         $set:body
     },{
         new:true
@@ -133,7 +133,7 @@ app.patch('/todos/:id',(req,res)=>{
      if(!todo){
          return res.status(404).send('Object not found');
      }
-     res.status(200).send(todo);
+     res.status(200).send({todo});
     }).catch((e)=>{
         res.status(404).send('Internal server error');
     });
