@@ -9,11 +9,12 @@ const express =require('express');
 
 
 
- 
+
 
  var  app =express();
 
- //for deployment
+ //for deployment   
+ //for prod not working
 const port =process.env.PORT ||3000;
 
 
