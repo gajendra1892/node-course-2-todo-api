@@ -160,6 +160,7 @@ var hexid = todos[0]._id.toHexString();
     .expect(200)
     .expect((res)=>{
         expect(res.body.todo._id).toBe(hexid);
+      
     })
    .end((err,res)=>{
    if(err)
@@ -169,7 +170,7 @@ var hexid = todos[0]._id.toHexString();
    }
    
    Todo.findById(hexid).then((todo)=>{
-    expect(todo).toBe(null);//toBeTruthy();//toNotExist();
+    expect(todo).toBeFalsy();//toBe(null);//toBeTruthy();//toNotExist();
     done();
    }).catch((e)=>{
       done(e);
@@ -241,7 +242,7 @@ describe('PATCH /todos/:id',()=>{
             .expect((res)=>{
                 expect(res.body.todo.completed).toBe(true);
                 expect(res.body.todo.text).toBe(body.text);
-                expect(res.body.todo.completedAt).toBeTruthy();//toBeA('number');
+                expect(typeof(res.body.todo.completedAt)).toBe('number'); //  expect(res.body.todo.completedAt).toBeTruthy();//toBeA('number');
             })
             .end(done);
             // .end((err,res)=>{
@@ -292,7 +293,7 @@ describe('PATCH /todos/:id',()=>{
         .expect((res)=>{
             expect(res.body.todo.completed).toBe(false);
             expect(res.body.todo.text).toBe(body.text);
-            expect(res.body.todo.completedAt).toBeNull();
+            expect(res.body.todo.completedAt).toBeFalsy();//toBeNull();
         })
         .end(done);
     });
@@ -370,7 +371,7 @@ describe('POST /users',()=>{
 
             User.findOne({email}).then((user)=>{
                 expect(user).toBeTruthy();
-               // expect(user.password).toNotContain(password);
+               expect(user.password).not.toBe(password);//toNotContain(password);
                 done();
             }).catch((e)=>done(e));
         });
@@ -427,7 +428,10 @@ describe('POST /users/login',()=>{
                 //     access:'auth',
                 //     token:res.headers['x-auth']
                 // });
-                expect(user.tokens[1].token).toBe(res.headers['x-auth']);
+                expect(user.toObject().tokens[1]).toMatchObject({
+                        access:'auth',
+                        token:res.headers['x-auth']
+                    });
                 
                 done();
             }).catch((e)=>done(e));
